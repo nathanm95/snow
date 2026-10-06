@@ -1,5 +1,8 @@
 # Snow
 
+![Time 2](store/emery_1_preview.gif) ![Round 2](store/gabbro_1_preview.gif)
+![Pebble 2](store/diorite_1_preview.gif) ![Time Round](store/chalk_1_preview.gif)
+
 A snow-globe watchface for every Pebble, including Pebble Time 2 (emery) and
 Pebble Round 2 (gabbro). Snow falls with gravity, piles up on the clock and
 along the edge of the glass, slides when you tilt your wrist, and flies back up
@@ -99,17 +102,51 @@ happens:
 
 1. Bump `version` in `package.json`. The store rejects a version it already
    holds.
-2. Build the store set into `store/`: five files per platform, plus icons and
-   a banner. This hasn't been made yet.
-3. Publish:
+2. Make sure `store/` is current (see Store assets below).
+3. Publish from a clean release build:
 
    ```sh
    pebble build
-   pebble publish --name "Snow" --category daily \
-     --description "A snow globe on your wrist: snow piles on the time, tilt to tip it, flick to stir." \
+   pebble publish --non-interactive --no-gif-all-platforms --name "Snow" --category daily \
+     --description "A snow globe on your wrist: snow piles on the time, tilt to tip it, flick to stir it up." \
      --icon-small store/icon_80x80.png --icon-large store/icon_144x144.png \
-     --release-notes "SDK 4 port for Time 2 and Round 2, with settings"
+     --release-notes "SDK 4 port for Time 2 and Round 2, with settings" \
+     --screenshots store/*_[1-5]_*.{gif,png}
    ```
+
+## Store assets
+
+`store/` holds the appstore set: five files for each of the seven platforms,
+each at the platform's native size.
+
+| File | Shows |
+|---|---|
+| `<platform>_1_preview.gif` | A flick: the snow swirls up and settles, at real speed |
+| `<platform>_2_time.png` | Settled snow at 10:08, default colours |
+| `<platform>_3_snowfall.png` | Mid-fall after the flick |
+| `<platform>_4_midnight.png` / `_4_inverted.png` (B&W) | Navy, ice and gold, with the big clock and date |
+| `<platform>_5_festive.png` / `_5_tilt.png` (B&W) | Green, white and red, heavy snow, watch tilted 25° |
+| `icon_80x80.png`, `icon_144x144.png` | `--icon-small` / `--icon-large` |
+| `banner_720x320.png` | Store header (optional) |
+
+Filenames start with the platform because `pebble publish` works out the
+platform from the text before the first underscore.
+
+To regenerate (about 4 minutes per platform; this runs `pebble kill` between
+platforms, so check no other session is using the emulators):
+
+```sh
+python3 tools/record_store.py /tmp/snow_rec          # or name platforms to redo
+python3 tools/store_assets.py /tmp/snow_rec
+pebble build                                         # back to a release build
+```
+
+`record_store.py` builds three variants pinned to 10:08 with build flags.
+Gravity is held upright (or at 25°) rather than read from the emulator's flat
+accelerometer, and the classic variant flicks itself 45 s after launch, so
+nothing depends on pypkjs once a variant is installed. `store_assets.py` finds
+the flick in each recording automatically, so no frame numbers need picking by
+hand.
 
 The UUID is new (`ed0e6795-…`), so this creates a new listing rather than
 updating the original's.

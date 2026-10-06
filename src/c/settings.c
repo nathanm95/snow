@@ -60,6 +60,12 @@ void settings_init(void) {
     case 4:   // blizzard
       g_settings.density = DENSITY_BLIZZARD;
       break;
+    case 5:   // festive colours, heavy
+      g_settings.col_bg = GColorDarkGreen;
+      g_settings.col_snow = GColorWhite;
+      g_settings.col_time = GColorRed;
+      g_settings.density = DENSITY_HEAVY;
+      break;
   }
 #endif
 }

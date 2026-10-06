@@ -110,6 +110,17 @@ static void update_proc(Layer *layer, GContext *ctx) {
 
 static void update_time(struct tm *t) {
   char time_text[8], date_text[24];
+#ifdef SNOW_SHOW_TIME
+  // Store screenshots: the emulator clock can't be set, so pin 10:08 on
+  // Thursday 24 December.
+  struct tm fixed = *t;
+  fixed.tm_hour = SNOW_SHOW_TIME / 100;
+  fixed.tm_min = SNOW_SHOW_TIME % 100;
+  fixed.tm_mday = 24;
+  fixed.tm_mon = 11;
+  fixed.tm_wday = 4;
+  t = &fixed;
+#endif
   strftime(time_text, sizeof(time_text), clock_is_24h_style() ? "%H:%M" : "%I:%M", t);
   if (!clock_is_24h_style() && time_text[0] == '0') {
     memmove(time_text, time_text + 1, strlen(time_text));
@@ -157,7 +168,24 @@ static void apply_tilt(void) {
     s_accel_on = false;
   }
   if (!g_settings.tilt) sim_set_gravity(0, 1000);
+#ifdef SNOW_DEMO_TILT
+  // Store recordings: hold the watch at a fixed angle instead of reading the
+  // emulator's accelerometer, which reports a flat watch.
+  if (s_accel_on) {
+    accel_data_service_unsubscribe();
+    s_accel_on = false;
+  }
+  int32_t a = DEG_TO_TRIGANGLE(SNOW_DEMO_TILT);
+  sim_set_gravity(sin_lookup(a) * 1000 / TRIG_MAX_RATIO, cos_lookup(a) * 1000 / TRIG_MAX_RATIO);
+#endif
 }
+
+#ifdef SNOW_DEMO_STIR
+static void demo_stir(void *context) {
+  sim_stir();
+  WAKE('s');
+}
+#endif
 
 static void tap_handler(AccelAxisType axis, int32_t direction) {
   if (g_settings.shake_light) light_enable_interaction();
@@ -251,6 +279,9 @@ static void init(void) {
 
   app_message_register_inbox_received(inbox_handler);
   app_message_open(512, 64);
+#ifdef SNOW_DEMO_STIR
+  app_timer_register(SNOW_DEMO_STIR * 1000, demo_stir, NULL);
+#endif
 
   WAKE('i');
 }

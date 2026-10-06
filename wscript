@@ -34,10 +34,13 @@ def build(ctx):
         ctx.env = ctx.all_envs[platform]
         ctx.set_group(ctx.env.PLATFORM_NAME)
         app_elf = '{}/pebble-app.elf'.format(ctx.env.BUILD_DIR)
-        if os.environ.get('SNOW_DEBUG'):
-            ctx.env.append_value('DEFINES', 'SNOW_DEBUG=1')
-        if os.environ.get('SNOW_PRESET'):
-            ctx.env.append_value('DEFINES', 'SNOW_PRESET=' + os.environ['SNOW_PRESET'])
+        # Test/store-only switches, passed through as C defines (see README):
+        # SNOW_DEBUG=1, SNOW_PRESET=n, SNOW_SHOW_TIME=1008,
+        # SNOW_DEMO_TILT=<degrees>, SNOW_DEMO_STIR=<seconds after launch>.
+        for key in ('SNOW_DEBUG', 'SNOW_PRESET', 'SNOW_SHOW_TIME', 'SNOW_DEMO_TILT',
+                    'SNOW_DEMO_STIR'):
+            if os.environ.get(key):
+                ctx.env.append_value('DEFINES', '%s=%d' % (key, int(os.environ[key])))
         ctx.pbl_build(source=ctx.path.ant_glob('src/c/**/*.c'), target=app_elf, bin_type='app')
 
         if build_worker:
