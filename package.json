@@ -1,0 +1,54 @@
+{
+  "name": "snow",
+  "author": "Nathan Marchant",
+  "version": "2.0.0",
+  "keywords": [
+    "pebble-app"
+  ],
+  "private": true,
+  "dependencies": {
+    "@rebble/clay": "^1.1.0"
+  },
+  "pebble": {
+    "displayName": "Snow",
+    "uuid": "ed0e6795-fa12-4262-8326-324e7b4a2550",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk",
+      "diorite",
+      "emery",
+      "flint",
+      "gabbro"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "capabilities": [
+      "configurable"
+    ],
+    "messageKeys": [
+      "ColBg",
+      "ColSnow",
+      "ColTime",
+      "Invert",
+      "ClockSize",
+      "ShowDate",
+      "Density",
+      "BatterySnow",
+      "BatterySaver",
+      "Endless",
+      "HourlyFlurry",
+      "Wind",
+      "Tilt",
+      "ShakeStir",
+      "ShakeLight",
+      "TouchSweep"
+    ],
+    "resources": {
+      "media": []
+    }
+  }
+}
