@@ -94,6 +94,22 @@ python3 tools/shot.py gabbro out.png          # screenshot via the QEMU monitor
 
 ## Releasing
 
-Bump `version` in `package.json` before every upload. The UUID is new
-(`ed0e6795-…`), so this would be a new appstore listing, not an update of the
-original's.
+**Blocked until Leo Vandriel agrees** (see the top of this file). When that
+happens:
+
+1. Bump `version` in `package.json`. The store rejects a version it already
+   holds.
+2. Build the store set into `store/`: five files per platform, plus icons and
+   a banner. This hasn't been made yet.
+3. Publish:
+
+   ```sh
+   pebble build
+   pebble publish --name "Snow" --category daily \
+     --description "A snow globe on your wrist: snow piles on the time, tilt to tip it, flick to stir." \
+     --icon-small store/icon_80x80.png --icon-large store/icon_144x144.png \
+     --release-notes "SDK 4 port for Time 2 and Round 2, with settings"
+   ```
+
+The UUID is new (`ed0e6795-…`), so this creates a new listing rather than
+updating the original's.
