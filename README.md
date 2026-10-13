@@ -1,17 +1,25 @@
 # Snow
 
-![Time 2](store/emery_1_preview.gif) ![Round 2](store/gabbro_1_preview.gif)
-![Pebble 2](store/diorite_1_preview.gif) ![Time Round](store/chalk_1_preview.gif)
-
 A snow-globe watchface for every Pebble, including Pebble Time 2 (emery) and
 Pebble Round 2 (gabbro). Snow falls with gravity, piles up on the clock and
 along the edge of the glass, slides when you tilt your wrist, and flies back up
 when you flick it.
 
+On the Rebble appstore as
+[Snow (Updated)](https://apps.repebble.com/snow-updated_bb08f60115414d268f62841a) (v2.0.0).
+
+![Time 2](store/emery_1_preview.gif) ![Round 2](store/gabbro_1_preview.gif)
+![Pebble 2](store/diorite_1_preview.gif) ![Time Round](store/chalk_1_preview.gif)
+
+<p>
+  <img src="store/gabbro_3_snowfall.png" width="160" alt="Snow falling after a flick">
+  <img src="store/emery_4_midnight.png" width="140" alt="Midnight: navy, ice and gold, big clock and date">
+  <img src="store/gabbro_5_festive.png" width="160" alt="Festive: green, white and red, heavy snow">
+</p>
+
 Based on **Snow Watchface** by Leo Vandriel (2013), whose source carries
 "Copyright (c) 2013 Leo Vandriel. All rights reserved." No public licence for
-it has been found. Running it on your own watch is fine, but **get the author's
-permission before publishing this to the appstore.**
+it has been found.
 
 ## What changed from the 2013 original
 
@@ -97,22 +105,25 @@ python3 tools/shot.py gabbro out.png          # screenshot via the QEMU monitor
 
 ## Releasing
 
-**Blocked until Leo Vandriel agrees** (see the top of this file). When that
-happens:
+v2.0.0 is live on the store as "Snow (Updated)", a listing of its own with a
+new UUID (`ed0e6795-…`), separate from the 2013 original's. To ship an update:
 
-1. Bump `version` in `package.json`. The store rejects a version it already
-   holds.
+1. Bump `version` in `package.json` past 2.0.0. The store rejects a version
+   it already holds.
 2. Make sure `store/` is current (see Store assets below).
 3. Publish from a clean release build:
 
    ```sh
    pebble build
-   pebble publish --non-interactive --no-gif-all-platforms --name "Snow" --category daily \
-     --description "A snow globe on your wrist: snow piles on the time, tilt to tip it, flick to stir it up." \
-     --icon-small store/icon_80x80.png --icon-large store/icon_144x144.png \
-     --release-notes "SDK 4 port for Time 2 and Round 2, with settings" \
+   pebble publish --non-interactive --no-gif-all-platforms \
+     --release-notes "What changed" \
      --screenshots store/*_[1-5]_*.{gif,png}
    ```
+
+The listing already exists, so `pebble publish` takes its existing-app path.
+The release goes live immediately, screenshots are added rather than replaced
+(remove old ones on the developer dashboard), and `--name`, `--category`,
+`--description` and `--icon-*` are ignored, so change those on the dashboard.
 
 ## Store assets
 
@@ -147,6 +158,3 @@ accelerometer, and the classic variant flicks itself 45 s after launch, so
 nothing depends on pypkjs once a variant is installed. `store_assets.py` finds
 the flick in each recording automatically, so no frame numbers need picking by
 hand.
-
-The UUID is new (`ed0e6795-…`), so this creates a new listing rather than
-updating the original's.
